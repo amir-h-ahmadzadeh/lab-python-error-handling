@@ -1,10 +1,21 @@
 products = ["t-shirt", "mug", "hat", "book", "keychain"]
 inventory = {}
 customer_orders = set()
+def input_handler(item):
+    try:
+         quantity = int(input(f"How many {item}s are there in the inventory?"))
+         if quantity < 0:
+             raise ValueError("Invalid quantity. The number should not be negative.")
+    except ValueError as error:
+        print(f"*** error: {error} ***")
+        input_handler(item)
+    return quantity
+   
 def initialize_inventory(products_list):
   
-  inventory = {item:int(input(f"How many {item}s are there in the inventory?")) for item in products_list}
-  return inventory
+    inventory = {item:input_handler(item) for item in products_list}
+    return inventory
+
 
 def get_customer_orders():
 
