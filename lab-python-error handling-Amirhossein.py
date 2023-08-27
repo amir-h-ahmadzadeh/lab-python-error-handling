@@ -1,19 +1,34 @@
 products = ["t-shirt", "mug", "hat", "book", "keychain"]
 inventory = {}
 customer_orders = set()
-def input_handler(item):
+def input_handler_initialize_inventory(item):
+    quantity = int()
     try:
          quantity = int(input(f"How many {item}s are there in the inventory?"))
          if quantity < 0:
              raise ValueError("Invalid quantity. The number should not be negative.")
     except ValueError as error:
         print(f"*** error: {error} ***")
-        input_handler(item)
+        quantity = input_handler_initialize_inventory(item)
     return quantity
+
+def input_handler_calculate_total(item):
+    input_price = float()
+    try:
+         input_price = float(input(f"what's the price of a {item}?"))
+         if input_price < 0:
+             raise ValueError("Invalid quantity. The price should not be negative.")
+    except ValueError as error:
+        print(f"*** error: {error} ***")
+        input_price = input_handler_calculate_total(item)
+    #except:
+    #   print("invalid price.Please try again.")
+    #   input_handler_calculate_total(item)
+    return input_price
    
 def initialize_inventory(products_list):
   
-    inventory = {item:input_handler(item) for item in products_list}
+    inventory = {item:input_handler_initialize_inventory(item) for item in products_list}
     return inventory
 
 
@@ -36,7 +51,6 @@ def update_inventory(inventory, customers_orders):
    updated_inventory = {key:value for (key,value) in updated_inventory.items() if updated_inventory[key] >0}
    return updated_inventory
 
-
 def print_order_statistics(order_stat):
     print("Order Statistics:")
     print(f"Total Products Ordered: {order_stat[0]}")
@@ -47,8 +61,8 @@ def print_updated_inventory(inventory):
     print("Updated inventory has:",'\n' ,output)
 
 def calculate_total_price(customer_orders):
-    prices = [int(input(f"what's the price of a {item}?")) for item in customer_orders]
-    total_price = sum(prices)
+    prices = [input_handler_calculate_total(item) for item in customer_orders]
+    total_price = round(sum(prices), 2)
     print(f"Total price is: {total_price}")
 
 
